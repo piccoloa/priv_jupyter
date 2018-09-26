@@ -1,0 +1,24 @@
+version: "3.1"
+services:
+
+  notebook:
+    build:
+      context: .
+    container_name: notebook
+    restart: always
+    ports:
+      - "8888:8888"
+    env_file:
+      - "./config/jupyter.env"
+#      - "./config/postgreSQLclient_ETL.env"
+    volumes:
+      - "./notebooks:/notebooks"
+      - "pv_data:/notebooks/data"
+    networks:
+      data_movers:
+
+networks:
+  data_movers:
+volumes:
+  pv_data:
+    driver: "local"
