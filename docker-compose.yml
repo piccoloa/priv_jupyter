@@ -17,8 +17,38 @@ services:
     networks:
       data_movers:
 
+  pub_pg_db:
+    build: './db'
+    container_name: postgres
+    restart: always
+    container_name: pub_pg_db
+    ports:
+        - "5432:5432"
+#    env_file:
+#      - "./config/postgreSQLserver.env"
+    environment:
+      - "FILLA_DB_USER=alexp"
+      - "FILLA_DB_PASSWORD=password"
+      - "FILLA_DB_DATABASE=pub_workspace"
+      - "POSTGRES_PASSWORD=postgres"
+    volumes:
+      - "pub_data:/var/lib/postgresql/data"
+    networks:
+      data_movers:
+
+  adminer:
+    image: adminer
+    restart: always
+    networks:
+      data_movers:
+    ports:
+      - 8080:8080
+
+
 networks:
   data_movers:
 volumes:
+  pub_data:
+    driver: "local"
   pv_data:
     driver: "local"
