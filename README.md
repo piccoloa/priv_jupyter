@@ -1,5 +1,6 @@
 # priv_jupyter
-This repo contains the necessary docker services to run a customized version of [jupyter/docker-stacks](https://github.com/jupyter/docker-stacks/tree/master/datascience-notebook) with a postgres service.
+dockerfile to create personal version of jupyter full stack
 
+## We always have to use README
 
-### Additional modules added to jupyter docker-tacks.
+### I have the new private running
