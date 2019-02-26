@@ -22,7 +22,7 @@ USER $NB_UID
 RUN pip install --upgrade setuptools
 RUN pip install --upgrade pip
 
-COPY requirements.txt /tmp/
+COPY ./config/requirements.txt /tmp/
 RUN pip install --requirement /tmp/requirements.txt && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
@@ -100,14 +100,14 @@ USER $NB_UID
 
 # Load all the sample code and resources for Mining the Social Web, 3rd Edition
 RUN rm -rf /home/$NB_USER/work
-COPY matplotlibrc /home/$NB_USER/.config/matplotlib/
+COPY ./config/matplotlibrc /home/$NB_USER/.config/matplotlib/
 
 USER root
 RUN chown $NB_UID:users /home/$NB_USER -R
 RUN chmod 755 /home/$NB_USER -R
 USER $NB_UID
 
-COPY fonts /usr/share/fonts/truetype/
+COPY ./config/fonts /usr/share/fonts/truetype/
 
 RUN fc-cache
 RUN fc-list
