@@ -6,8 +6,8 @@ LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 USER root
 
 RUN apt-get update && \
-    apt-get -qy install --reinstall build-essential && \
-    apt-get -qy install gcc\
+    apt-get -qy --no-install-recommends install --reinstall build-essential && \
+    apt-get -qy install gcc \
     apt-utils \
     freetds-dev \
     freetds-bin \
