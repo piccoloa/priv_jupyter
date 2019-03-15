@@ -2,7 +2,6 @@ python3-linkedin==1.0.2
 PyGithub==1.43.5
 prettytable==0.7.2
 Pillow==5.4.1
-nltk==3.4
 requests==2.21.0
 mailbox==0.4
 facebook-sdk==3.1.0

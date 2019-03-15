@@ -39,6 +39,7 @@ RUN conda install --quiet --yes -c\
     'pandas=0.22*' \
     'numexpr=2.6*' \
     'matplotlib' \
+    'nltk==3.4' \
     'scipy=1.0*' \
     'scikit-learn=0.19*' \
     'scikit-image=0.13*' \
@@ -82,13 +83,7 @@ RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
 USER root
 
 # Download NLTK data
-RUN python -m nltk.downloader -d /usr/local/share/nltk_data vader_lexicon \
-                                                            stopwords \
-                                                            maxent_ne_chunker \
-                                                            maxent_treebank_pos_tagger \
-                                                            words \
-                                                            punkt \
-                                                            averaged_perceptron_tagger
+# RUN python -m nltk.download('all')
 
 COPY ./config/odbcinst.ini /etc/odbcinst.ini
 RUN odbcinst -q -d -i -f /etc/odbcinst.ini
