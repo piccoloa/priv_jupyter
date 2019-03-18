@@ -22,31 +22,17 @@ USER $NB_UID
 RUN pip install --upgrade setuptools
 RUN pip install --upgrade pip
 
-COPY ./config/requirements.txt /tmp/
-RUN pip install --requirement /tmp/requirements.txt && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
+# COPY ./config/requirements.txt /tmp/
+# RUN pip install --requirement /tmp/requirements.txt && \
+#     fix-permissions $CONDA_DIR && \
+#     fix-permissions /home/$NB_USER
 
 RUN conda install --quiet --yes -c\
     'conda-forge' \
     'conda-build' \
-    'osmnx' \
     'dask' \
-    'spacy' \
-    'pymongo' \
     'blas=*=openblas' \
-    'ipywidgets=7.2*' \
-    'pandas=0.22*' \
-    'numexpr=2.6*' \
-    'matplotlib' \
-    'nltk==3.4' \
-    'scipy=1.0*' \
-    'scikit-learn=0.19*' \
-    'scikit-image=0.13*' \
-    'sympy=1.1*' \
     'cython=0.28*' \
-    'patsy=0.5*' \
-    'statsmodels=0.8*' \
     'cloudpickle=0.5*' \
     'dill=0.2*' \
     'sqlalchemy=1.2*' \
@@ -54,9 +40,37 @@ RUN conda install --quiet --yes -c\
     'h5py=2.7*' \
     'vincent=0.4.*' \
     'beautifulsoup4=4.6.*' \
+    'feedparser==5.2.1' \
+    'flask==1.0.2' \
+    'google-api-python-client==1.7.8' \
+    'geopy==1.18.1' \
+    'ipywidgets=7.2*' \
     'jpype1' \
-    'protobuf=3.*' \
     'jupyter_contrib_nbextensions' \
+    'matplotlib' \
+    'networkx==2.2' \
+    'nltk==3.4' \
+    'numexpr=2.6*' \
+    'osmnx' \
+    'pandas=0.22*' \
+    'patsy=0.5*' \
+    'Pillow==5.4.1' \
+    'protobuf=3.*' \
+    'pymongo==3.7.2' \
+    'PyGithub==1.43.5' \
+    'prettytable==0.7.2' \
+    'requests==2.21.0' \
+    'spacy' \
+    'pymongo' \
+    'psycopg2' \
+    'sqlalchemy' \
+    'pyodbc==4.0.25' \
+    'PyMySQL==0.9.3' \
+    'scipy=1.0*' \
+    'scikit-learn=0.19*' \
+    'scikit-image=0.13*' \
+    'statsmodels=0.8*' \
+    'sympy=1.1*' \
     'xlrd'  && \
     conda remove --quiet --yes --force qt pyqt && \
     conda clean -tipsy && \
@@ -73,7 +87,15 @@ RUN conda install --quiet --yes -c\
 RUN conda build purge-all
 
 RUN pip install -q --no-cache-dir charade \
-boilerpipe3 
+boilerpipe3 \
+envoy==0.0.3 \
+twitter==1.18.0 \
+facebook-sdk==3.1.0 \
+cluster==1.4.0 \
+python3-linkedin==1.0.2 \
+mailbox==0.4 \
+twitter-text==3.0 \
+simplekml==1.3.1
 
 # Import matplotlib the first time to build the font cache.
 ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
