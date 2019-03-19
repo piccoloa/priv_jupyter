@@ -16,64 +16,69 @@ RUN apt-get update && \
     default-jdk
 
 RUN update-alternatives --config java
+COPY ./config/odbcinst.ini /etc/odbcinst.ini
+RUN odbcinst -q -d -i -f /etc/odbcinst.ini
+
+# Install X Virtual Framebuffer
+RUN apt-get install -y xvfb
 
 USER $NB_UID
 
-RUN pip install --upgrade setuptools
-RUN pip install --upgrade pip
+RUN pip install --upgrade pip \
+                setuptools
 
-# COPY ./config/requirements.txt /tmp/
-# RUN pip install --requirement /tmp/requirements.txt && \
-#     fix-permissions $CONDA_DIR && \
-#     fix-permissions /home/$NB_USER
+COPY ./config/requirements.txt /tmp/
+RUN pip install --requirement /tmp/requirements.txt && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
 
 RUN conda install --quiet --yes -c\
     'conda-forge' \
     'conda-build' \
     'dask' \
     'blas=*=openblas' \
-    'cython=0.28*' \
-    'cloudpickle=0.5*' \
-    'dill=0.2*' \
-    'sqlalchemy=1.2*' \
-    'hdf5=1.10*' \
-    'h5py=2.7*' \
-    'vincent=0.4.*' \
-    'beautifulsoup4=4.6.*' \
-    'feedparser==5.2.1' \
-    'flask==1.0.2' \
-    'google-api-python-client==1.7.8' \
-    'geopy==1.18.1' \
-    'ipywidgets=7.2*' \
+    'cython' \
+    'cloudpickle' \
+    'dill' \
+    'sqlalchemy' \
+    'hdf5' \
+    'h5py' \
+    'vincent' \
+    'beautifulsoup4' \
+    'feedparser' \
+    'flask' \
+    'google-api-python-client' \
+    'geopy' \
+    'ipywidgets' \
     'jpype1' \
     'jupyter_contrib_nbextensions' \
     'matplotlib' \
-    'networkx==2.2' \
-    'nltk==3.4' \
-    'numexpr=2.6*' \
+    'networkx' \
+    'nltk' \
+    'numexpr' \
     'osmnx' \
-    'pandas=0.22*' \
-    'patsy=0.5*' \
-    'Pillow==5.4.1' \
-    'protobuf=3.*' \
-    'pymongo==3.7.2' \
-    'PyGithub==1.43.5' \
-    'prettytable==0.7.2' \
-    'requests==2.21.0' \
+    'pandas' \
+    'patsy' \
+    'pillow' \
+    'protobuf' \
+    'pymongo' \
+    'pygithub' \
+    'prettytable' \
+    'requests' \
     'spacy' \
     'pymongo' \
     'psycopg2' \
     'sqlalchemy' \
-    'pyodbc==4.0.25' \
-    'PyMySQL==0.9.3' \
-    'scipy=1.0*' \
-    'scikit-learn=0.19*' \
-    'scikit-image=0.13*' \
-    'statsmodels=0.8*' \
-    'sympy=1.1*' \
+    'pyodbc' \
+    'pymysql' \
+    'scipy' \
+    'scikit-learn' \
+    'scikit-image' \
+    'statsmodels' \
+    'sympy' \
     'xlrd'  && \
     conda remove --quiet --yes --force qt pyqt && \
-    conda clean -tipsy && \
+    conda build purge-all && \
     # Activate ipywidgets extension in the environment that runs the notebook server
     jupyter contrib nbextension install --user && \
     jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
@@ -84,18 +89,16 @@ RUN conda install --quiet --yes -c\
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
-RUN conda build purge-all
-
-RUN pip install -q --no-cache-dir charade \
-boilerpipe3 \
-envoy==0.0.3 \
-twitter==1.18.0 \
-facebook-sdk==3.1.0 \
-cluster==1.4.0 \
-python3-linkedin==1.0.2 \
-mailbox==0.4 \
-twitter-text==3.0 \
-simplekml==1.3.1
+# RUN pip install -q --no-cache-dir charade \
+#                         boilerpipe3 \
+#                         envoy \
+#                         twitter \
+#                         facebook-sdk \
+#                         cluster \
+#                         python3-linkedin \
+#                         mailbox \
+#                         twitter-text \
+#                         simplekml
 
 # Import matplotlib the first time to build the font cache.
 ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
@@ -103,26 +106,21 @@ RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
     fix-permissions /home/$NB_USER
 
 USER root
-
-# Download NLTK data
-# RUN python -m nltk.download('all')
-
-COPY ./config/odbcinst.ini /etc/odbcinst.ini
-RUN odbcinst -q -d -i -f /etc/odbcinst.ini
-
-# Install X Virtual Framebuffer
-RUN apt-get install -y xvfb
-#ENV DISPLAY=:0
-USER $NB_UID
+RUN chown $NB_UID:users /home/$NB_USER -R
+RUN chmod 755 /home/$NB_USER -R
 
 # Load all the sample code and resources for Mining the Social Web, 3rd Edition
 RUN rm -rf /home/$NB_USER/work
 COPY ./config/matplotlibrc /home/$NB_USER/.config/matplotlib/
 
-USER root
-RUN chown $NB_UID:users /home/$NB_USER -R
-RUN chmod 755 /home/$NB_USER -R
+# Download NLTK data
+# RUN python -m nltk.download('all')
+
+ENV DISPLAY=:0
 USER $NB_UID
+
+
+# USER $NB_UID
 
 COPY ./config/fonts /usr/share/fonts/truetype/
 
