@@ -76,6 +76,7 @@ RUN conda install --quiet --yes -c\
     'scikit-image' \
     'statsmodels' \
     'sympy' \
+    'pyahocorasick' \
     'xlrd'  && \
     conda remove --quiet --yes --force qt pyqt && \
     conda build purge-all && \
